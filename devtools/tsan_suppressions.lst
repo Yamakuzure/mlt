@@ -1,0 +1,11 @@
+# ThreadSanitizer suppressions file
+
+# Qt5 does a lot with memory pools, leading to numerous false positives
+race:Qt5Core
+race:Qt5Gui
+
+# These have been seen to look like they deadlock
+deadlock:dbus-1
+
+# These functions are uninstrumented and cause false positives:
+race:dbus_connection_get_is_connected

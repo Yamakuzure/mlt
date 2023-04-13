@@ -1,0 +1,29 @@
+#!/bin/bash
+
+xSUB="$1"
+shift 1
+
+xHERE="$(dirname $(dirname $(readlink -f $0)))"
+PREFIX="${xHERE}/${xSUB}"
+DEVTOOLS="${xHERE}/devtools"
+
+ldOri="${LD_LIBRARY_PATH}"
+ptOri="${PATH}"
+
+export PATH=$PREFIX/bin:$ptOri
+export LD_LIBRARY_PATH=$PREFIX/lib64:$PREFIX/lib64/mlt-7:$ldOri
+
+COMMON_OPTIONS="allow_addr2line=true strip_path_prefix=${xHERE}/ verbosity=1 detect_leaks=true leak_check_at_exit=true"
+
+ASAN_OPTIONS="${COMMON_OPTIONS} quarantine_size_mb=512 suppressions=${DEVTOOLS}/asan_suppressions.lst  \
+        check_initialization_order=true detect_stack_use_after_return=true print_stats=true"           \
+LSAN_OPTIONS="${COMMON_OPTIONS} report_objects=1       suppressions=${DEVTOOLS}/lsan_suppressions.lst" \
+TSAN_OPTIONS="${COMMON_OPTIONS} history_size=7         suppressions=${DEVTOOLS}/tsan_suppressions.lst  \
+        force_seq_cst_atomics=1 second_deadlock_stack=1"                                               \
+	$PREFIX/bin/melt-7 $@
+res=$?
+
+export LD_LIBRARY_PATH=$ldOri
+export PATH=$ptOri
+
+exit $res

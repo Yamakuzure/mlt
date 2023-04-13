@@ -1,0 +1,8 @@
+#!/bin/bash
+
+xHERE="$(dirname $(readlink -f $0))"
+
+$xHERE/melt_wrap_exe install_l $@
+res=$?
+
+exit $res
