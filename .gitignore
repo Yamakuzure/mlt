@@ -61,4 +61,4 @@ src/modules/glaxnimate/mltglaxnimate-qt6_autogen/
 .qt/
 ..clang-format.swp
 cmake-build-*/
-install_?/
+install*/

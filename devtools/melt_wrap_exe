@@ -13,6 +13,9 @@ ptOri="${PATH}"
 export PATH=$PREFIX/bin:$ptOri
 export LD_LIBRARY_PATH=$PREFIX/lib64:$PREFIX/lib64/mlt-7:$ldOri
 
+pushd ${DEVTOOLS}
+ulimit -c unlimited
+
 COMMON_OPTIONS="allow_addr2line=true strip_path_prefix=${xHERE}/ verbosity=1 detect_leaks=true leak_check_at_exit=true"
 
 ASAN_OPTIONS="${COMMON_OPTIONS} quarantine_size_mb=512 suppressions=${DEVTOOLS}/asan_suppressions.lst  \
@@ -22,6 +25,10 @@ TSAN_OPTIONS="${COMMON_OPTIONS} history_size=7         suppressions=${DEVTOOLS}/
         force_seq_cst_atomics=1 second_deadlock_stack=1"                                               \
 	$PREFIX/bin/melt-7 $@
 res=$?
+
+echo "Result is $res"
+
+popd
 
 export LD_LIBRARY_PATH=$ldOri
 export PATH=$ptOri
