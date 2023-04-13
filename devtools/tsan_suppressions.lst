@@ -4,6 +4,11 @@
 race:Qt5Core
 race:Qt5Gui
 
+# These libraries are uninstrumented
+race:avutil
+race:avcodec
+race:cairo
+
 # These have been seen to look like they deadlock
 deadlock:dbus-1
 
